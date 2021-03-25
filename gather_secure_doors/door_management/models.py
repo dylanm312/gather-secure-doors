@@ -19,6 +19,7 @@ class Room(models.Model):
 
 class Door(models.Model):
     door_name = models.CharField(max_length=200)
+    door_id = models.CharField(max_length=200)
     open_image = models.ImageField()
     closed_image = models.ImageField()
     width = models.IntegerField(default=1)
