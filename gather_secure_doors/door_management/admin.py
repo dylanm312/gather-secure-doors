@@ -2,8 +2,13 @@ from django.contrib import admin
 from .models import Workspace, Room, Door
 
 # Register your models here.
-admin.site.register(Workspace)
-admin.site.register(Room)
+@admin.register(Workspace)
+class WorkspaceAdmin(admin.ModelAdmin):
+    readonly_fields = ['workspace_slug']
+
+@admin.register(Room)
+class RoomAdmin(admin.ModelAdmin):
+    readonly_fields = ['room_slug']
 
 @admin.register(Door)
 class DoorAdmin(admin.ModelAdmin):

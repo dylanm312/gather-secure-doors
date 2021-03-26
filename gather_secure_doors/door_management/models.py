@@ -53,6 +53,6 @@ class Door(models.Model):
     def save(self, *args, **kwargs):
         # Only generate slug for brand new doors, else we risk breaking links
         if not self.id:
-            self.door_id = slugify(self.door_name)
+            self.door_slug = slugify(self.door_name)
 
         super(Door, self).save(*args, **kwargs)
