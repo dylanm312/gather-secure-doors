@@ -3,7 +3,6 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, JsonResponse
 
 from .models import Workspace, Room, Door
-
 from .gather_door_updater import unlock_door
 
 # Create your views here.
