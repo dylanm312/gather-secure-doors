@@ -8,6 +8,93 @@ import requests
 import logging
 import base64
 
+def init_door(workspace, room, door):
+
+    logging.basicConfig(filename='door_updater.log', level=logging.DEBUG)
+
+    # Get all our variables in order
+    api_key = workspace.api_key
+    door_image_urls = {
+        'open': 'https://i.imgur.com/VqQ9w3q.png',
+        'closed': 'https://i.imgur.com/xh6zKMd.png'
+    }
+    door_url = "http://localhost:8000" + reverse('doorLogin', kwargs={'workspace_slug': workspace.workspace_slug, 'room_slug': room.room_slug, 'door_slug': door.door_slug})
+
+    logging.debug('Got workspace, room, door, and API key')
+    logging.debug('Door image urls: ')
+    logging.debug(door_image_urls)
+    
+    logging.debug('Door url:')
+    logging.debug(door_url)
+
+    # Get the current map state
+    map_data = get_map(workspace, room, api_key)
+    old_map_data = json.loads(json.dumps(map_data))
+
+    logging.debug('Got current map state')
+
+    # Look for the door on the map. If we find it, return
+    found = False
+    for i, obj in enumerate(map_data['objects']):
+        if (obj['x'] == door.x_position and obj['y'] == door.y_position):
+            found = True
+            logging.debug('Door already found at X: %d, Y: %d' % (door.x_position, door.y_position))
+            return False
+
+    # If we couldn't find the door, create it
+    if found == False:
+        closed_door = {
+            'type': 1,
+            'x': door.x_position,
+            'y': door.y_position,
+            'properties': {
+                'url': door_url
+            },
+            'width': door.width,
+            'height': door.height,
+            'normal': door_image_urls['closed'],
+            'highlighted': door_image_urls['closed']
+        }
+
+        map_data['objects'].append(closed_door)
+
+        logging.debug('Door initialized at X: %d, Y: %d' % (door.x_position, door.y_position))
+        logging.debug(map_data['objects'][-1])
+
+    # Change the normal tile to impassible in map data
+    collision_buffer = bytearray(base64.b64decode(map_data['collisions']))
+    for dx in range(door.width):
+        for dy in range(door.height):
+            collision_buffer[
+                (door.y_position + dy) * old_map_data['dimensions'][0] + door.x_position + dx
+            ] = 0x01
+
+    map_data['collisions'] = base64.b64encode(collision_buffer).decode('ascii')
+    logging.debug('Changed normal tile to impassible (door initialized)')
+
+    ###### Send the update to Gather ######
+    response, payload = set_map(workspace, room, api_key, map_data)
+
+    logging.debug('Response summary (init_door):')
+    logging.debug({
+        'workspace': workspace.workspace_id,
+        'room': room.room_id,
+        'door': door.door_slug,
+        'api_key': api_key,
+        'door_pos': {
+            'x': door.x_position,
+            'y': door.y_position
+        },
+
+        'response': {
+            'status_code' : response.status_code,
+            'text': response.text
+        },
+        'request' : {
+            'payload' : payload
+        },
+    })
+
 def unlock_door(workspace, room, door):
 
     logging.basicConfig(filename='door_updater.log', level=logging.DEBUG)
@@ -114,7 +201,7 @@ def unlock_door(workspace, room, door):
         t.start()
 
 
-    logging.debug('Response summary:')
+    logging.debug('Response summary (unlock_door):')
     logging.debug({
         'workspace': workspace.workspace_id,
         'room': room.room_id,
@@ -169,7 +256,7 @@ def delete_door(workspace, room, door):
     ###### Send the update to Gather ######
     response, payload = set_map(workspace, room, api_key, map_data)
 
-    logging.debug('Response summary:')
+    logging.debug('Response summary (delete_door):')
     logging.debug({
         'workspace': workspace.workspace_id,
         'room': room.room_id,
