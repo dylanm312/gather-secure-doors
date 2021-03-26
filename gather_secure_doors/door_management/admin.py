@@ -4,4 +4,7 @@ from .models import Workspace, Room, Door
 # Register your models here.
 admin.site.register(Workspace)
 admin.site.register(Room)
-admin.site.register(Door)
+
+@admin.register(Door)
+class DoorAdmin(admin.ModelAdmin):
+    readonly_fields = ['door_slug']
