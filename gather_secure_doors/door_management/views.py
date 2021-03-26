@@ -37,9 +37,8 @@ def check_password(request):
 
     if password == door.password:
         passwordOk = True
+        unlock_door(workspace_id, room_id, door_id)
     else:
         passwordOk = False
 
-    return JsonResponse(unlock_door(workspace_id, room_id, door_id))
-
-    #return render(request, 'door_management/doorLogin.html', {'workspace': workspace, 'room': room, 'door': door, 'passwordOk': passwordOk})
+    return render(request, 'door_management/doorLogin.html', {'workspace': workspace, 'room': room, 'door': door, 'passwordOk': passwordOk})
