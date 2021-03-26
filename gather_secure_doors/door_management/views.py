@@ -1,13 +1,20 @@
 from django.http.response import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
+from django.views import generic
 
 from .models import Workspace, Room, Door
 from .gather_door_updater import unlock_door
 
 # Create your views here.
-def index(request):
-    return HttpResponse('Hello world!')
+class WorkspaceIndexView(generic.ListView):
+    model = Workspace
+
+class RoomIndexView(generic.ListView):
+    model = Room
+
+class DoorIndexView(generic.ListView):
+    model = Door
 
 def door_login(request, workspace_slug, room_slug, door_slug):
     workspace = get_object_or_404(Workspace, workspace_slug=workspace_slug)
