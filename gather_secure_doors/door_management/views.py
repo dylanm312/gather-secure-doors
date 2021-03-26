@@ -1,6 +1,6 @@
 from django.http.response import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from .models import Workspace, Room, Door
 
@@ -41,6 +41,6 @@ def check_password(request):
     else:
         passwordOk = False
 
-    return HttpResponse(str(unlock_door(workspace_id, room_id, door_id)))
+    return JsonResponse(unlock_door(workspace_id, room_id, door_id))
 
     #return render(request, 'door_management/doorLogin.html', {'workspace': workspace, 'room': room, 'door': door, 'passwordOk': passwordOk})
