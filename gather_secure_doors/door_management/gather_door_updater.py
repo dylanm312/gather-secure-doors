@@ -128,13 +128,72 @@ def unlock_door(workspace_id, room_id, door_id):
             'x': door.x_position,
             'y': door.y_position
         },
+
+        'response': {
+            'status_code' : response.status_code,
+            'text': response.text
+        },
         'request' : {
             'payload' : payload
+        },
+    })
+
+def delete_door(workspace_id, room_id, door_id):
+
+    logging.basicConfig(filename='door_updater.log', level=logging.DEBUG)
+
+    # Get all our variables in order
+    workspace = Workspace.objects.get(pk=workspace_id)
+    room = Room.objects.get(pk=room_id)
+    door = Door.objects.get(pk=door_id)
+    api_key = workspace.api_key
+    
+    # Get the current map state
+    map_data = get_map(workspace, room, api_key)
+
+    # Find and remove the door
+    found = False
+    for i, obj in enumerate(map_data['objects']):
+        if (obj['x'] == door.x_position and obj['y'] == door.y_position):
+            found = True
+            logging.debug('Found door at X: %d, Y: %d' % (obj['x'], obj['y']))
+            del map_data['objects'][i]
+            logging.debug('Door deleted from map')
+
+    ###### Get rid of the impassable tile ######
+
+    # Change the impassable tile to normal in the new map data
+    collision_buffer = bytearray(base64.b64decode(map_data['collisions']))
+    for dx in range(door.width):
+        for dy in range(door.height):
+            collision_buffer[
+                (door.y_position + dy) * map_data['dimensions'][0] + door.x_position + dx
+            ] = 0x00
+
+    map_data['collisions'] = base64.b64encode(collision_buffer).decode('ascii')
+    logging.debug('Changed impassable tile to normal')
+
+    ###### Send the update to Gather ######
+    response, payload = set_map(workspace, room, api_key, map_data)
+
+    logging.debug('Response summary:')
+    logging.debug({
+        'workspace': workspace.workspace_id,
+        'room': room.room_id,
+        'door': door.door_slug,
+        'api_key': api_key,
+        'door_pos': {
+            'x': door.x_position,
+            'y': door.y_position
         },
         'response': {
             'status_code' : response.status_code,
             'text': response.text
-        }
+        },
+        'request' : {
+            'payload' : payload
+        },
+        
     })
 
 def get_map(workspace, room, api_key):
