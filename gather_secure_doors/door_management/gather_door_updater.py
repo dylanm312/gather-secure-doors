@@ -8,6 +8,9 @@ import requests
 import logging
 import base64
 
+# FQDN where this site is hosted, to server as a base URL for door login paths
+FQDN = "http://localhost:8000"
+
 def init_door(workspace, room, door):
 
     logging.basicConfig(filename='door_updater.log', level=logging.DEBUG)
@@ -18,7 +21,7 @@ def init_door(workspace, room, door):
         'open': 'https://i.imgur.com/VqQ9w3q.png',
         'closed': 'https://i.imgur.com/xh6zKMd.png'
     }
-    door_url = "http://localhost:8000" + reverse('doorLogin', kwargs={'workspace_slug': workspace.workspace_slug, 'room_slug': room.room_slug, 'door_slug': door.door_slug})
+    door_url = FQDN + reverse('doorLogin', kwargs={'workspace_slug': workspace.workspace_slug, 'room_slug': room.room_slug, 'door_slug': door.door_slug})
 
     logging.debug('Got workspace, room, door, and API key')
     logging.debug('Door image urls: ')
@@ -105,7 +108,7 @@ def unlock_door(workspace, room, door):
         'open': 'https://i.imgur.com/VqQ9w3q.png',
         'closed': 'https://i.imgur.com/xh6zKMd.png'
     }
-    door_url = "http://localhost:8000" + reverse('doorLogin', kwargs={'workspace_slug': workspace.workspace_slug, 'room_slug': room.room_slug, 'door_slug': door.door_slug})
+    door_url = FQDN + reverse('doorLogin', kwargs={'workspace_slug': workspace.workspace_slug, 'room_slug': room.room_slug, 'door_slug': door.door_slug})
 
     logging.debug('Got workspace, room, door, and API key')
     logging.debug('Door image urls: ')
