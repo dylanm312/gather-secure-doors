@@ -2,21 +2,17 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from threading import Thread
 import json
-from .models import Workspace, Room, Door
 from time import sleep
 
 import requests
 import logging
 import base64
 
-def unlock_door(workspace_id, room_id, door_id):
+def unlock_door(workspace, room, door):
 
     logging.basicConfig(filename='door_updater.log', level=logging.DEBUG)
 
     # Get all our variables in order
-    workspace = Workspace.objects.get(pk=workspace_id)
-    room = Room.objects.get(pk=room_id)
-    door = Door.objects.get(pk=door_id)
     api_key = workspace.api_key
     door_image_urls = {
         'open': 'https://i.imgur.com/VqQ9w3q.png',
@@ -138,14 +134,11 @@ def unlock_door(workspace_id, room_id, door_id):
         },
     })
 
-def delete_door(workspace_id, room_id, door_id):
+def delete_door(workspace, room, door):
 
     logging.basicConfig(filename='door_updater.log', level=logging.DEBUG)
 
     # Get all our variables in order
-    workspace = Workspace.objects.get(pk=workspace_id)
-    room = Room.objects.get(pk=room_id)
-    door = Door.objects.get(pk=door_id)
     api_key = workspace.api_key
     
     # Get the current map state

@@ -37,7 +37,7 @@ def check_password(request):
 
     if password == door.password:
         passwordOk = True
-        unlock_door(workspace_id, room_id, door_id)
+        unlock_door(workspace, room, door)
     else:
         passwordOk = False
 

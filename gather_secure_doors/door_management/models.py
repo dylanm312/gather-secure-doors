@@ -1,6 +1,6 @@
 from django.db import models
 from django.template.defaultfilters import slugify
-#from .gather_door_updater import delete_door
+from .gather_door_updater import delete_door
 
 # Create your models here.
 class Workspace(models.Model):
@@ -59,7 +59,7 @@ class Door(models.Model):
         super(Door, self).save(*args, **kwargs)
 
     # Delete door from Gather when deleted from Django Admin
-    # def delete(self, *args, **kwargs):
-    #     delete_door(self.room.workspace.id, self.room.id, self.id)
+    def delete(self, *args, **kwargs):
+        delete_door(self.room.workspace, self.room, self)
 
-    #     super(Door, self).delete(*args, **kwargs)
+        super(Door, self).delete(*args, **kwargs)
