@@ -1,10 +1,9 @@
 {% extends './base.html' %}
 {% block title %}{{ room_list.0.workspace.workspace_name }}: Room List{% endblock %}
 
+{% block back-btn-link %}{% url 'workspaceIndex' %}{% endblock %}
+
 {% block content %}
-<nav class="nav">
-    <a href="{% url 'workspaceIndex' %}" class="btn btn-primary nav-link back-btn">Back</a>
-</nav>
 <div class="row">
     <div class="col-12 text-center">
         <h1>Welcome! Please select a room:</h1>

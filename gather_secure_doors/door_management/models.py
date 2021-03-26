@@ -50,7 +50,7 @@ class Door(models.Model):
     def __str__(self):
         return self.door_name
 
-    # Auto-generate door slug
+    # Auto-generate door slug and init door in Gather map
     def save(self, *args, **kwargs):
         # Only generate slug for brand new doors, else we risk breaking links
         if not self.id:
@@ -59,7 +59,7 @@ class Door(models.Model):
 
         super(Door, self).save(*args, **kwargs)
 
-    # Delete door from Gather when deleted from Django Admin
+    # Delete door from Gather map when deleted from Django Admin
     def delete(self, *args, **kwargs):
         gather_door_updater.delete_door(self.room.workspace, self.room, self)
 
