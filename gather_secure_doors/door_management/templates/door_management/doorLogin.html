@@ -18,9 +18,9 @@
                 <h2>Please enter the password for door {{ door }} below:</h2>
                 <form method="post" action={% url 'checkPassword' %} class="form-inline justify-content-center">
                     {% csrf_token %}
-                    <input name="workspaceId" type="hidden" value={{ workspace.workspace_id }} />
-                    <input name="roomId" type="hidden" value={{ room.room_id }} />
-                    <input name="doorId" type="hidden" value={{ door.door_id }} />
+                    <input name="workspaceId" type="hidden" value={{ workspace.id }} />
+                    <input name="roomId" type="hidden" value={{ room.id }} />
+                    <input name="doorId" type="hidden" value={{ door.id }} />
                     <input name="password" type="password" class="form-control mr-2" id="password" placeholder="password" />
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
