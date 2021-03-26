@@ -22,11 +22,14 @@ def unlock_door(workspace_id, room_id, door_id):
         'open': 'https://i.imgur.com/VqQ9w3q.png',
         'closed': 'https://i.imgur.com/xh6zKMd.png'
     }
-    door_url = "http://localhost:8000/" + reverse('doorLogin', kwargs={'workspace_slug': workspace.workspace_slug, 'room_slug': room.room_slug, 'door_slug': door.door_slug})
+    door_url = "http://localhost:8000" + reverse('doorLogin', kwargs={'workspace_slug': workspace.workspace_slug, 'room_slug': room.room_slug, 'door_slug': door.door_slug})
 
     logging.debug('Got workspace, room, door, and API key')
     logging.debug('Door image urls: ')
     logging.debug(door_image_urls)
+    
+    logging.debug('Door url:')
+    logging.debug(door_url)
 
     # Get the current map state
     map_data = get_map(workspace, room, api_key)
@@ -79,6 +82,7 @@ def unlock_door(workspace_id, room_id, door_id):
         old_map_data['objects'].append(closed_door)
 
         logging.debug('Door not found; created at X: %d, Y: %d' % (door.x_position, door.y_position))
+        logging.debug(map_data['objects'][-1])
 
 
     ###### Get rid of the impassable tile ######
@@ -106,7 +110,7 @@ def unlock_door(workspace_id, room_id, door_id):
     logging.debug('Changed normal tile to impassible in old map')
 
     ###### Send the update to Gather ######
-    response = set_map(workspace, room, api_key, map_data)
+    response, payload = set_map(workspace, room, api_key, map_data)
 
     if response.status_code == 200:
         # Wait 5 seconds and then close/lock the door
@@ -123,6 +127,9 @@ def unlock_door(workspace_id, room_id, door_id):
         'door_pos': {
             'x': door.x_position,
             'y': door.y_position
+        },
+        'request' : {
+            'payload' : payload
         },
         'response': {
             'status_code' : response.status_code,
@@ -143,10 +150,10 @@ def set_map(workspace, room, api_key, map_data, delay=0):
     sleep(delay)
     payload = {
         'spaceId': workspace.workspace_id,
-        'mapId': workspace.workspace_id,
+        'mapId': room.room_id,
         'apiKey': api_key,
         'mapContent': map_data
     }
     r = requests.post('https://gather.town/api/setMap', json=payload)
     logging.debug('Updated Gather map: %s' % r.text)
-    return r
+    return r, payload
