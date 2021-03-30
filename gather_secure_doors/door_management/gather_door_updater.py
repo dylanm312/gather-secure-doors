@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from threading import Thread
@@ -13,7 +14,7 @@ FQDN = "http://localhost:8000"
 
 def init_door(workspace, room, door):
 
-    logging.basicConfig(filename='door_updater.log', level=logging.DEBUG)
+    logging.basicConfig(filename=settings.LOG_FILE, level=logging.DEBUG)
 
     # Get all our variables in order
     api_key = workspace.api_key
@@ -100,7 +101,7 @@ def init_door(workspace, room, door):
 
 def unlock_door(workspace, room, door):
 
-    logging.basicConfig(filename='door_updater.log', level=logging.DEBUG)
+    logging.basicConfig(filename=settings.LOG_FILE, level=logging.DEBUG)
 
     # Get all our variables in order
     api_key = workspace.api_key
@@ -226,7 +227,7 @@ def unlock_door(workspace, room, door):
 
 def delete_door(workspace, room, door):
 
-    logging.basicConfig(filename='door_updater.log', level=logging.DEBUG)
+    logging.basicConfig(filename=settings.LOG_FILE, level=logging.DEBUG)
 
     # Get all our variables in order
     api_key = workspace.api_key

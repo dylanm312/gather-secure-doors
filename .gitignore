@@ -132,3 +132,5 @@ dmypy.json
 
 # Door images
 /gather_secure_doors/door_management/static/door_images/
+
+settings_local.py
