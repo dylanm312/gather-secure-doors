@@ -128,4 +128,4 @@ STATICFILES_FINDERS = [
 
 
 # Import local settings
-from project.settings_local import *
+from gather_secure_doors.settings_local import *
