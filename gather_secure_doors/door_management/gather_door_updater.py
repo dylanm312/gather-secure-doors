@@ -4,6 +4,7 @@ from django.urls import reverse
 from threading import Thread
 from time import sleep
 
+import copy
 import requests
 import logging
 import base64
@@ -41,7 +42,7 @@ def init_door(door):
 
     # Get the current map state
     map_data = get_map(door.room.workspace, door.room, door.room.workspace.api_key)
-    old_map_data = map_data.copy()
+    old_map_data = copy.deepcopy(map_data)
 
     logging.debug('Got current map state')
 
@@ -102,9 +103,6 @@ def init_door(door):
             'status_code': response.status_code,
             'text': response.text
         },
-        'request': {
-            'payload': payload
-        },
     })
 
 
@@ -128,7 +126,7 @@ def unlock_door(door):
 
     # Get the current map state
     map_data = get_map(door.room.workspace, door.room, door.room.workspace.api_key)
-    old_map_data = map_data.copy()
+    old_map_data = copy.deepcopy(map_data)
 
     logging.debug('Got current map state')
 
@@ -232,9 +230,6 @@ def unlock_door(door):
             'status_code': response.status_code,
             'text': response.text
         },
-        'request': {
-            'payload': payload
-        },
     })
 
 
@@ -287,9 +282,6 @@ def delete_door(door):
         'response': {
             'status_code': response.status_code,
             'text': response.text
-        },
-        'request': {
-            'payload': payload
         },
     })
 
