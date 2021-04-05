@@ -8,8 +8,8 @@ from . import gather_door_updater
 class Workspace(models.Model):
     workspace_name = models.CharField(max_length=200)
     workspace_slug = models.SlugField()
-    workspace_id = models.CharField(max_length=200)
-    api_key = models.CharField(max_length=200)
+    workspace_id = models.CharField(max_length=200,help_text='Last two segments of gather URL separated by one backslash. ie. BMcBcCSENP5Duahv\ryantest1')
+    api_key = models.CharField(max_length=200,help_text='Get one here: https://gather.town/apiKeys')
 
     def __str__(self):
         return self.workspace_name
@@ -42,8 +42,8 @@ class Room(models.Model):
 class Door(models.Model):
     door_name = models.CharField(max_length=200)
     door_slug = models.SlugField()
-    open_image = models.ImageField(upload_to='doors')
-    closed_image = models.ImageField(upload_to='doors')
+    open_image = models.ImageField(upload_to='doors', blank=True, null=True)
+    closed_image = models.ImageField(upload_to='doors', blank=True, null=True)
     width = models.IntegerField(default=1)
     height = models.IntegerField(default=2)
     x_position = models.IntegerField(default=0)

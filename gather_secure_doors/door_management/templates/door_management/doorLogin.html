@@ -1,11 +1,15 @@
 {% extends './base.html' %}
 {% block title %}{{ door }}{% endblock %}
 
+{% block navbar %}{% endblock %}
+
 {% block content %}
+<div class="my-3 d-flex justify-content-center"><img src="/static/images/sequoia_black.png" alt="logo" width="400" height="100"></div>
 <div class="row">
     <div class="col-12 text-center">
         <p>You are in workspace <b>{{ workspace }}</b>, room <b>{{ room }}</b>.</p>
-        <h1>Welcome! This door is locked.</h1>
+        {% if not passwordOk %}
+	<h1>Welcome! This door is locked.</h1>
         <h2>Please enter the password for {{ door }} below:</h2>
         <form method="post" action={% url 'checkPassword' %} class="form-inline justify-content-center">
             {% csrf_token %}
@@ -15,8 +19,9 @@
             <input name="password" type="password" class="form-control mr-2" id="password" placeholder="password" />
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+	{% endif %}
         {% if passwordOk %}
-        <p>Door opened!</p>
+	<p><h3>The door is unlocked! Please close this window (select “X” in the upper right corner of this window) to pass through the doorway. You have 30 seconds before the door will lock again.</h3></p>
         {% elif passwordOk == False %}
         <p>Incorrect password</p>
         {% endif %}

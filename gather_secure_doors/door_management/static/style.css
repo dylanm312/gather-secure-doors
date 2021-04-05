@@ -1,3 +1,8 @@
 h1 {
     margin: 2vh 0;
 }
+
+body {
+    background-color: #e2dfd5;
+    font: "Helvetica Neue";
+}

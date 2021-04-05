@@ -23,11 +23,23 @@ def find_door(map_dict, door):
         return -1
 
 
+def get_door_image_urls(door):
+    '''Returns image url or blank'''
+    urls = {}
+    if door.open_image:
+        urls['open'] = door.open_image.url
+    else:
+        urls['open'] = ''
+    if door.closed_image:
+        urls['closed'] = door.closed_image.url
+    else:
+        urls['closed'] = ''
+    return urls
+
+
 def init_door(door):
-    door_image_urls = {
-        'open': door.open_image.url,
-        'closed': door.closed_image.url
-    }
+    door_image_urls = get_door_image_urls(door)
+
     door_url = settings.FQDN + reverse('doorLogin', kwargs={
         'workspace_slug': door.room.workspace.workspace_slug,
         'room_slug': door.room.room_slug,
@@ -108,10 +120,7 @@ def init_door(door):
 
 def unlock_door(door):
     logging.basicConfig(filename=settings.LOG_FILE, level=logging.DEBUG)
-    door_image_urls = {
-        'open': door.open_image.url,
-        'closed': door.closed_image.url
-    }
+    door_image_urls = get_door_image_urls(door)
     door_url = settings.FQDN + reverse('doorLogin', kwargs={
         'workspace_slug': door.room.workspace.workspace_slug,
         'room_slug': door.room.room_slug,
@@ -206,13 +215,13 @@ def unlock_door(door):
         map_data)
 
     if response.status_code == 200:
-        # Wait 5 seconds and then close/lock the door
+        # Wait 30 seconds and then close/lock the door
         t = Thread(target=set_map, args=(
             door.room.workspace,
             door.room,
             door.room.workspace.api_key,
             old_map_data,
-            5))
+            30))
         t.start()
 
     logging.debug('Response summary (unlock_door):')
