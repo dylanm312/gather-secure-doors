@@ -215,13 +215,13 @@ def unlock_door(door):
         map_data)
 
     if response.status_code == 200:
-        # Wait 30 seconds and then close/lock the door
+        # Wait 180 seconds and then close/lock the door
         t = Thread(target=set_map, args=(
             door.room.workspace,
             door.room,
             door.room.workspace.api_key,
             old_map_data,
-            30))
+            180))
         t.start()
 
     logging.debug('Response summary (unlock_door):')

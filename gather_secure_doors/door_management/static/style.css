@@ -3,6 +3,17 @@ h1 {
 }
 
 body {
-    background-color: #e2dfd5;
-    font: "Helvetica Neue";
+}
+
+.welcome {
+    font-family: "Montserrat", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #515050;
+}
+
+.instruction {
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    color: #515050;
 }

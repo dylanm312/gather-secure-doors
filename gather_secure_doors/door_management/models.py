@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.utils.safestring import mark_safe
 from . import gather_door_updater
 
 
@@ -8,7 +9,7 @@ from . import gather_door_updater
 class Workspace(models.Model):
     workspace_name = models.CharField(max_length=200)
     workspace_slug = models.SlugField()
-    workspace_id = models.CharField(max_length=200,help_text='Last two segments of gather URL separated by one backslash. ie. BMcBcCSENP5Duahv\ryantest1')
+    workspace_id = models.CharField(max_length=200,help_text=mark_safe('Last two segments of gather URL separated by one backslash. ie. BMcBcCSENP5Duahv\\testdoor'))
     api_key = models.CharField(max_length=200,help_text='Get one here: https://gather.town/apiKeys')
 
     def __str__(self):

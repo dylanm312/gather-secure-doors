@@ -55,7 +55,7 @@ def check_password(request):
     room = get_object_or_404(Room, pk=room_id)
     door = get_object_or_404(Door, pk=door_id)
 
-    if password == door.password:
+    if password.lower().replace(" ", "") == door.password.lower().replace(" ", ""):
         passwordOk = True
         logging.debug('unlocking door: {}'.format(door.id))
         unlock_door(door)
